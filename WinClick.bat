@@ -1,9 +1,7 @@
 @echo off
 	cls
-	Title WinClick by MartyFiles
-Rem https://t.me/martyfiles
-	Color 0f
-	Mode 20,1
+	title my-winclick
+	сolor 97
 	chcp 65001 >nul
 	echo "%~dp0\Work" | findstr /r "[()!]" >nul && echo Путь до .bat содержит недопустимые символы. && timeout /t 7 >nul && exit
 	SetLocal EnableDelayedExpansion
@@ -245,8 +243,8 @@ Rem Отключить GameDVR
 	reg add "HKLM\Software\Policies\Microsoft\Windows\GameDVR" /v "AllowGameDVR" /t REG_DWORD /d 0 /f >nul
 	reg add "HKLM\Software\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR" /v "Value" /t REG_DWORD /d 0 /f >nul
     reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\GameDVR" /v "AllowGameDVR" /t REG_DWORD /d 0 /f >nul
-Rem Схема питания Максимальная производительность
-	%TI% reg add "HKLM\System\CurrentControlSet\Control\Power\User\PowerSchemes" /v ActivePowerScheme /t REG_SZ /d e9a42b02-d5df-448d-aa00-03f14749eb61 /f >nul
+@REM Rem Схема питания Максимальная производительность
+@REM 	%TI% reg add "HKLM\System\CurrentControlSet\Control\Power\User\PowerSchemes" /v ActivePowerScheme /t REG_SZ /d e9a42b02-d5df-448d-aa00-03f14749eb61 /f >nul
 Rem Функция Возобновить
 	"%~dp0\Work\vivetool.exe" /disable /id:56517033 >nul
     reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\CrossDeviceResume\Configuration" /v "IsResumeAllowed" /t REG_DWORD /d 0 /f >nul 
@@ -259,8 +257,8 @@ Rem Запрет на установку драйверов из ЦО
 	reg add "HKLM\Software\Policies\Microsoft\Windows\Device Metadata" /v "PreventDeviceMetadataFromNetwork" /t REG_DWORD /d "1" /f >nul
 	reg add "HKLM\Software\Policies\Microsoft\Windows\DriverSearching" /v "SearchOrderConfig" /t REG_DWORD /d "0" /f >nul
 	reg add "HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate" /v "ExcludeWUDriversInQualityUpdate" /t REG_DWORD /d "1" /f >nul
-Rem Запрет на обновление баз Защитника
-	reg add "HKLM\Software\Policies\Microsoft\MRT" /v "DontOfferThroughWUAU" /t REG_DWORD /d "1" /f >nul
+@REM Rem Запрет на обновление баз Защитника
+@REM 	reg add "HKLM\Software\Policies\Microsoft\MRT" /v "DontOfferThroughWUAU" /t REG_DWORD /d "1" /f >nul
 Rem Пауза обновлений до 07.07.77
 	reg add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "PauseUpdatesStartTime" /t REG_SZ /d 2024-09-13T00:00:00Z /f >nul
 	reg add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "PauseUpdatesExpiryTime" /t REG_SZ /d 2077-07-07T00:00:00Z /f >nul
@@ -324,8 +322,8 @@ Rem Отключение других рекомендаций и предлож
 Rem Установка DNS на Wi-Fi адаптеры
 set adapters=Ethernet "Беспроводная сеть" "Бездротова мережа" "Wireless network"
 for %%a in (!adapters!) do (
-	netsh interface ipv4 set dns name=%%a static 1.1.1.1 >nul
-	netsh interface ip add dns name=%%a address=1.0.0.1 index=2 >nul
+	netsh interface ipv4 set dns name=%%a static 8.8.8.8 >nul
+	netsh interface ip add dns name=%%a address=1.1.1.1 index=2 >nul
 )
 
 	start /b "" Helper /Overlay "Установка драйверов `n`n [10/13]" /Font "Impact" /Size "40"
@@ -360,41 +358,41 @@ Rem Удаление Сеть из Проводника
 Rem Темная тема
 	reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f >nul 2>&1
 	reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f >nul 2>&1
-Rem Установка обоев
-	copy "%~dp0\Work\1.jpg" "%SystemRoot%\Web\Wallpaper\Windows" >nul 2>&1
-	reg add "HKCU\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d "%SystemRoot%\Web\Wallpaper\Windows\1.jpg" /f >nul 2>&1
-Rem Установка синих папок
-	%TI% ren "%SystemRoot%\SystemResources\imageres.dll.mun" imageres.dll.mun_bak
-	%TI% copy "%~dp0\Work\BlueIcon\imageres.dll.mun" "%SystemRoot%\SystemResources"
-	for %%f in ("File Explorer.lnk" Проводник.lnk) do del /q "%AppData%\Microsoft\Windows\Start Menu\Programs\%%~f" "%AppData%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\%%~f" >nul 2>&1
+@REM Rem Установка обоев
+@REM 	copy "%~dp0\Work\1.jpg" "%SystemRoot%\Web\Wallpaper\Windows" >nul 2>&1
+@REM 	reg add "HKCU\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d "%SystemRoot%\Web\Wallpaper\Windows\1.jpg" /f >nul 2>&1
+@REM Rem Установка синих папок
+@REM 	%TI% ren "%SystemRoot%\SystemResources\imageres.dll.mun" imageres.dll.mun_bak
+@REM 	%TI% copy "%~dp0\Work\BlueIcon\imageres.dll.mun" "%SystemRoot%\SystemResources"
+@REM 	for %%f in ("File Explorer.lnk" Проводник.lnk) do del /q "%AppData%\Microsoft\Windows\Start Menu\Programs\%%~f" "%AppData%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\%%~f" >nul 2>&1
 	
-	copy "%~dp0\Work\BlueIcon\File Explorer.lnk" "%AppData%\Microsoft\Windows\Start Menu\Programs" /y >nul
-	copy "%~dp0\Work\BlueIcon\File Explorer.lnk" "%AppData%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" /y >nul
-	copy "%~dp0\Work\BlueIcon\Blank.ico" "%SystemRoot%" /y >nul
+@REM 	copy "%~dp0\Work\BlueIcon\File Explorer.lnk" "%AppData%\Microsoft\Windows\Start Menu\Programs" /y >nul
+@REM 	copy "%~dp0\Work\BlueIcon\File Explorer.lnk" "%AppData%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" /y >nul
+@REM 	copy "%~dp0\Work\BlueIcon\Blank.ico" "%SystemRoot%" /y >nul
 
-	xcopy "%~dp0\Work\BlueIcon\windows" "%SystemRoot%" /E /I /Y /H /K /C /R /F >nul
-	xcopy "%~dp0\Work\BlueIcon\x64" "%ProgramFiles%" /E /I /Y /H /K /C /R /F >nul
-	xcopy "%~dp0\Work\BlueIcon\x86" "%ProgramFiles(x86)%" /E /I /Y /H /K /C /R /F >nul
-	xcopy "%~dp0\Work\BlueIcon\users" "%SystemDrive%\Users" /E /I /Y /H /K /C /R /F >nul
+@REM 	xcopy "%~dp0\Work\BlueIcon\windows" "%SystemRoot%" /E /I /Y /H /K /C /R /F >nul
+@REM 	xcopy "%~dp0\Work\BlueIcon\x64" "%ProgramFiles%" /E /I /Y /H /K /C /R /F >nul
+@REM 	xcopy "%~dp0\Work\BlueIcon\x86" "%ProgramFiles(x86)%" /E /I /Y /H /K /C /R /F >nul
+@REM 	xcopy "%~dp0\Work\BlueIcon\users" "%SystemDrive%\Users" /E /I /Y /H /K /C /R /F >nul
 
-	reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v "179" /t REG_EXPAND_SZ /d "%SystemRoot%\Blank.ico,0" /f >nul
+@REM 	reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Icons" /v "179" /t REG_EXPAND_SZ /d "%SystemRoot%\Blank.ico,0" /f >nul
 
-	reg add "HKCR\CompressedFolder\DefaultIcon" /v "" /t REG_EXPAND_SZ /d "%SystemRoot%\System32\imageres.dll,165" /f >nul
-	reg add "HKCR\ArchiveFolder\DefaultIcon" /v "" /t REG_EXPAND_SZ /d "%SystemRoot%\System32\imageres.dll,165" /f >nul
+@REM 	reg add "HKCR\CompressedFolder\DefaultIcon" /v "" /t REG_EXPAND_SZ /d "%SystemRoot%\System32\imageres.dll,165" /f >nul
+@REM 	reg add "HKCR\ArchiveFolder\DefaultIcon" /v "" /t REG_EXPAND_SZ /d "%SystemRoot%\System32\imageres.dll,165" /f >nul
 	
-	pushd "%ProgramFiles%"
-	for %%p in (x64.ico desktop.ini) do attrib +h %%p >nul 2>&1
-	popd
-	pushd "%ProgramFiles(x86)%"
-	for %%p in (x86.ico desktop.ini) do attrib +h %%p >nul 2>&1
-	popd
-	pushd "%SystemDrive%\Users"
-	for %%p in (users.ico desktop.ini) do attrib +h %%p >nul 2>&1
-	popd
-	pushd "%SystemRoot%"
-	for %%p in (windows.ico desktop.ini) do attrib +h %%p >nul 2>&1
-	popd
-	for %%f in ("%ProgramFiles(x86)%" "%ProgramFiles%" "%SystemDrive%\Users" "%SystemRoot%") do ATTRIB +R "%%~f" >nul 2>&1
+@REM 	pushd "%ProgramFiles%"
+@REM 	for %%p in (x64.ico desktop.ini) do attrib +h %%p >nul 2>&1
+@REM 	popd
+@REM 	pushd "%ProgramFiles(x86)%"
+@REM 	for %%p in (x86.ico desktop.ini) do attrib +h %%p >nul 2>&1
+@REM 	popd
+@REM 	pushd "%SystemDrive%\Users"
+@REM 	for %%p in (users.ico desktop.ini) do attrib +h %%p >nul 2>&1
+@REM 	popd
+@REM 	pushd "%SystemRoot%"
+@REM 	for %%p in (windows.ico desktop.ini) do attrib +h %%p >nul 2>&1
+@REM 	popd
+@REM 	for %%f in ("%ProgramFiles(x86)%" "%ProgramFiles%" "%SystemDrive%\Users" "%SystemRoot%") do ATTRIB +R "%%~f" >nul 2>&1
 
 Rem Установка дополнительных эскизов через Icaros
 	if not exist "%ProgramFiles%\WinClean\Preview" mkdir "%ProgramFiles%\WinClean\Preview" >nul 2>&1
@@ -432,8 +430,8 @@ Rem Скрытие Рекомендуем
 	reg add "HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start" /v "HideRecommendedSection" /t REG_DWORD /d 1 /f >nul
 	reg add "HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Education" /v "IsEducationEnvironment" /t REG_DWORD /d 1 /f >nul
 	reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer" /v "HideRecommendedSection" /t REG_DWORD /d 1 /f >nul
-Rem Установка значка Настройки в Пуске
-	reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Start" /v "VisiblePlaces" /t REG_BINARY /d 86087352AA5143429F7B2776584659D4 /f >nul
+@REM Rem Установка значка Настройки в Пуске
+@REM 	reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Start" /v "VisiblePlaces" /t REG_BINARY /d 86087352AA5143429F7B2776584659D4 /f >nul
 Rem Удаления сжатия обоев
 	reg add "HKCU\Control Panel\Desktop" /v "JPEGImportQuality" /t REG_DWORD /d 0x64 /f >nul
 Rem Удаление экрана блокировки
