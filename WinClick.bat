@@ -284,12 +284,12 @@ Rem Запрет автоматических обновлений
 
 	start /b "" Helper /Overlay "Применение полезных твиков `n`n [9/13]" /Font "Impact" /Size "40"
 	timeout /t 3 /nobreak >nul 2>&1
-Rem Отключение UAC
-    for %%a in (EnableLUA PromptOnSecureDesktop EnableVirtualization ConsentPromptBehaviorAdmin) do reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v "%%a" /t REG_DWORD /d 0 /f >nul
-    for %%b in (batfile cmdfile exefile cplfile mscfile) do reg add "HKLM\Software\Classes\%%b\shell\runas" /v "ProgrammaticAccessOnly" /t REG_SZ /d "" /f >nul
-    reg add "HKLM\Software\Classes\exefile\shell\runas2" /v "ProgrammaticAccessOnly" /t REG_SZ /d "" /f >nul
-Rem Административная учетная запись
-	net user "%UserName%" /active:yes >nul
+@REM Rem Отключение UAC
+@REM     for %%a in (EnableLUA PromptOnSecureDesktop EnableVirtualization ConsentPromptBehaviorAdmin) do reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v "%%a" /t REG_DWORD /d 0 /f >nul
+@REM     for %%b in (batfile cmdfile exefile cplfile mscfile) do reg add "HKLM\Software\Classes\%%b\shell\runas" /v "ProgrammaticAccessOnly" /t REG_SZ /d "" /f >nul
+@REM     reg add "HKLM\Software\Classes\exefile\shell\runas2" /v "ProgrammaticAccessOnly" /t REG_SZ /d "" /f >nul
+@REM Rem Административная учетная запись
+@REM 	net user "%UserName%" /active:yes >nul
 Rem Снятие региональных ограничений
 	sc start TrustedInstaller >nul
 	%TI% ren "%SystemRoot%\System32\IntegratedServicesRegionPolicySet.json" IntegratedServicesRegionPolicySet.json_bak
@@ -335,14 +335,14 @@ for %%a in (!adapters!) do (
 	start /b "" Helper /Overlay "Установка драйверов `n`n [10/13]" /Font "Impact" /Size "40"
 	timeout /t 3 /nobreak >nul 2>&1
 Rem Если есть папка Drivers на Рабочем столе
-if exist "%USERPROFILE%\Desktop\Drivers" (
-    pnputil /add-driver "%USERPROFILE%\Desktop\Drivers\*.inf" /subdirs /install >nul 2>&1
-    timeout /t 3 /nobreak >nul 2>&1
-) else (
-Rem Если нет папки Driver на Рабочем столе
-	start /b "" Helper /Overlay "Папка с драйверами не обнаружена  `n`n Пропускаю..." /Font "Impact" /Size "40"
-	timeout /t 3 /nobreak >nul 2>&1
-)
+@REM if exist "%USERPROFILE%\Desktop\Drivers" (
+@REM     pnputil /add-driver "%USERPROFILE%\Desktop\Drivers\*.inf" /subdirs /install >nul 2>&1
+@REM     timeout /t 3 /nobreak >nul 2>&1
+@REM ) else (
+@REM Rem Если нет папки Driver на Рабочем столе
+@REM 	start /b "" Helper /Overlay "Папка с драйверами не обнаружена  `n`n Пропускаю..." /Font "Impact" /Size "40"
+@REM 	timeout /t 3 /nobreak >nul 2>&1
+@REM )
 
 
 	start /b "" Helper /Overlay "Установка Visual C++ и DirectX `n`n [11/13]" /Font "Impact" /Size "40"
@@ -400,27 +400,27 @@ Rem Темная тема
 @REM 	popd
 @REM 	for %%f in ("%ProgramFiles(x86)%" "%ProgramFiles%" "%SystemDrive%\Users" "%SystemRoot%") do ATTRIB +R "%%~f" >nul 2>&1
 
-Rem Установка дополнительных эскизов через Icaros
-	if not exist "%ProgramFiles%\WinClean\Preview" mkdir "%ProgramFiles%\WinClean\Preview" >nul 2>&1
-    for %%F in (avcodec-ics-61.dll avformat-ics-61.dll avutil-ics-59.dll IcarosCache.dll IcarosPropertyHandler.dll IcarosThumbnailProvider.dll libunarr-ics.dll swscale-ics-8.dll) do (
-	copy "%~dp0\Work\Icaros\%%F" "%ProgramFiles%\WinClean\Preview" >nul 2>&1) 
+@REM Rem Установка дополнительных эскизов через Icaros
+@REM 	if not exist "%ProgramFiles%\WinClean\Preview" mkdir "%ProgramFiles%\WinClean\Preview" >nul 2>&1
+@REM     for %%F in (avcodec-ics-61.dll avformat-ics-61.dll avutil-ics-59.dll IcarosCache.dll IcarosPropertyHandler.dll IcarosThumbnailProvider.dll libunarr-ics.dll swscale-ics-8.dll) do (
+@REM 	copy "%~dp0\Work\Icaros\%%F" "%ProgramFiles%\WinClean\Preview" >nul 2>&1) 
 
-    reg add "HKLM\SOFTWARE\Classes\CLSID\{c5aec3ec-e812-4677-a9a7-4fee1f9aa000}" /ve /t REG_SZ /d "Icaros Thumbnail Provider" /f >nul
-    reg add "HKLM\SOFTWARE\Classes\CLSID\{c5aec3ec-e812-4677-a9a7-4fee1f9aa000}\InProcServer32" /ve /t REG_SZ /d "%ProgramFiles%\WinClean\Preview\IcarosThumbnailProvider.dll" /f >nul
-    reg add "HKLM\SOFTWARE\Classes\CLSID\{c5aec3ec-e812-4677-a9a7-4fee1f9aa000}\InProcServer32" /v "ThreadingModel" /t REG_SZ /d "Apartment" /f >nul
-    reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved" /v "{c5aec3ec-e812-4677-a9a7-4fee1f9aa000}" /t REG_SZ /d "Icaros Thumbnail Provider" /f >nul
+@REM     reg add "HKLM\SOFTWARE\Classes\CLSID\{c5aec3ec-e812-4677-a9a7-4fee1f9aa000}" /ve /t REG_SZ /d "Icaros Thumbnail Provider" /f >nul
+@REM     reg add "HKLM\SOFTWARE\Classes\CLSID\{c5aec3ec-e812-4677-a9a7-4fee1f9aa000}\InProcServer32" /ve /t REG_SZ /d "%ProgramFiles%\WinClean\Preview\IcarosThumbnailProvider.dll" /f >nul
+@REM     reg add "HKLM\SOFTWARE\Classes\CLSID\{c5aec3ec-e812-4677-a9a7-4fee1f9aa000}\InProcServer32" /v "ThreadingModel" /t REG_SZ /d "Apartment" /f >nul
+@REM     reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved" /v "{c5aec3ec-e812-4677-a9a7-4fee1f9aa000}" /t REG_SZ /d "Icaros Thumbnail Provider" /f >nul
 	
-	reg add "HKCU\Software\Icaros" /v "Cache" /t REG_DWORD /d 2 /f >nul 
-	reg add "HKCU\Software\Icaros" /v "FrameThresh" /t REG_DWORD /d 20 /f >nul 
-	reg add "HKCU\Software\Icaros" /v "UseCoverArt" /t REG_DWORD /d 2 /f >nul 
-	reg add "HKCU\Software\Icaros\Cache" /v "Location" /t REG_SZ /d "%ProgramFiles%\WinClean\Preview" /f >nul
-	reg add "HKCU\Software\Icaros\Cache\Locations" /v "%ProgramFiles%\WinClean\Preview" /t REG_DWORD /d 33554453 /f >nul
+@REM 	reg add "HKCU\Software\Icaros" /v "Cache" /t REG_DWORD /d 2 /f >nul 
+@REM 	reg add "HKCU\Software\Icaros" /v "FrameThresh" /t REG_DWORD /d 20 /f >nul 
+@REM 	reg add "HKCU\Software\Icaros" /v "UseCoverArt" /t REG_DWORD /d 2 /f >nul 
+@REM 	reg add "HKCU\Software\Icaros\Cache" /v "Location" /t REG_SZ /d "%ProgramFiles%\WinClean\Preview" /f >nul
+@REM 	reg add "HKCU\Software\Icaros\Cache\Locations" /v "%ProgramFiles%\WinClean\Preview" /t REG_DWORD /d 33554453 /f >nul
 
-    for %%E in (.3g2 .3gp .3gp2 .3gpp .ai .aiff .amv .ape .asf .avi .avif .bik .bmp .cb7 .cbr .cbz .cur .dds .divx .dpg .dv .dvr-ms .eps .epub .evo .exr .f4v .flac .flv .gif .hdmov .hdr .heic .heif .indd .jpg .k3g .m1v .m2t .m2ts .m2v .m4b .m4p .m4v .mk3d .mka .mkv .mov .mp2v .mp3 .mp4 .mp4v .mpc .mpe .mpeg .mpg .mpv2 .mpv4 .mqv .mts .mxf .nsv .odp .ods .odt .ofr .ofs .ogg .ogm .ogv .opus .png .psd .psxprj .px .qt .ram .rm .rmvb .skm .spx .swf .tak .tga .tif .tiff .tp .tpr .trp .ts .tta .vob .wav .webm .webp .wm .wmv .wv .xvid
-    ) do (
-        reg add "HKLM\Software\Classes\%%E\ShellEx\{e357fccd-a995-4576-b01f-234630154e96}" /ve /t REG_SZ /d "{c5aec3ec-e812-4677-a9a7-4fee1f9aa000}" /f >nul 
-        reg add "HKLM\Software\Classes\%%E\ShellEx\{BB2E617C-0920-11d1-9A0B-00C04FC2D6C1}" /ve /t REG_SZ /d "{c5aec3ec-e812-4677-a9a7-4fee1f9aa000}" /f >nul 
-    )
+@REM     for %%E in (.3g2 .3gp .3gp2 .3gpp .ai .aiff .amv .ape .asf .avi .avif .bik .bmp .cb7 .cbr .cbz .cur .dds .divx .dpg .dv .dvr-ms .eps .epub .evo .exr .f4v .flac .flv .gif .hdmov .hdr .heic .heif .indd .jpg .k3g .m1v .m2t .m2ts .m2v .m4b .m4p .m4v .mk3d .mka .mkv .mov .mp2v .mp3 .mp4 .mp4v .mpc .mpe .mpeg .mpg .mpv2 .mpv4 .mqv .mts .mxf .nsv .odp .ods .odt .ofr .ofs .ogg .ogm .ogv .opus .png .psd .psxprj .px .qt .ram .rm .rmvb .skm .spx .swf .tak .tga .tif .tiff .tp .tpr .trp .ts .tta .vob .wav .webm .webp .wm .wmv .wv .xvid
+@REM     ) do (
+@REM         reg add "HKLM\Software\Classes\%%E\ShellEx\{e357fccd-a995-4576-b01f-234630154e96}" /ve /t REG_SZ /d "{c5aec3ec-e812-4677-a9a7-4fee1f9aa000}" /f >nul 
+@REM         reg add "HKLM\Software\Classes\%%E\ShellEx\{BB2E617C-0920-11d1-9A0B-00C04FC2D6C1}" /ve /t REG_SZ /d "{c5aec3ec-e812-4677-a9a7-4fee1f9aa000}" /f >nul 
+@REM     )
 
 Rem Установка секунд в трее
     reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v ShowSecondsInSystemClock /t REG_DWORD /d 1 /f >nul
@@ -451,21 +451,21 @@ Rem Показывать расширения файлов
 	reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v HideFileExt /t REG_DWORD /d 0 /f >nul
 
 
-	start /b "" Helper /Overlay "Сжатие системы `n`n [13/13]" /Font "Impact" /Size "40"
-Rem Очистка Центра уведомлений
-	set "NameSvcMask="
-	for /f "delims=" %%A in (' 2^>nul reg query HKLM\System\CurrentControlSet\Services /k /f WpnUserService_ ^| find "HKEY_"') do set "NameSvcMask=%%~nxA"
-	if defined NameSvcMask (
-	  net stop %NameSvcMask%
-	  del /q /f "%LocalAppData%\Microsoft\Windows\Notifications\*.db*"
-	 timeout /t 1 /nobreak >nul 2>&1
-	  net start %NameSvcMask%
-	) >nul 2>&1
-Rem Сжатие файлов
-	compact /c /s:%SystemDrive%\ /exe:LZX /i /a /f >nul 2>&1
-	reg add "HKCU\Software\WinClick" >nul
-	start /b "" Helper /Overlay "Готово. Перезагружаюсь..." /Font "Impact" /Size "40"
-	timeout /t 4 /nobreak >nul 2>&1
+@REM 	start /b "" Helper /Overlay "Сжатие системы `n`n [13/13]" /Font "Impact" /Size "40"
+@REM Rem Очистка Центра уведомлений
+@REM 	set "NameSvcMask="
+@REM 	for /f "delims=" %%A in (' 2^>nul reg query HKLM\System\CurrentControlSet\Services /k /f WpnUserService_ ^| find "HKEY_"') do set "NameSvcMask=%%~nxA"
+@REM 	if defined NameSvcMask (
+@REM 	  net stop %NameSvcMask%
+@REM 	  del /q /f "%LocalAppData%\Microsoft\Windows\Notifications\*.db*"
+@REM 	 timeout /t 1 /nobreak >nul 2>&1
+@REM 	  net start %NameSvcMask%
+@REM 	) >nul 2>&1
+@REM Rem Сжатие файлов
+@REM 	compact /c /s:%SystemDrive%\ /exe:LZX /i /a /f >nul 2>&1
+@REM 	reg add "HKCU\Software\WinClick" >nul
+@REM 	start /b "" Helper /Overlay "Готово. Перезагружаюсь..." /Font "Impact" /Size "40"
+@REM 	timeout /t 4 /nobreak >nul 2>&1
 Rem Перезагрузка
 	shutdown /r /t 2
 	Helper /Overlay
