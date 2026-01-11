@@ -23,7 +23,7 @@ REM Принудительный запуск в CMD
 
 Rem Скрытие консоли и проверка версии
 	call :WinVer && exit /b
-	start /b "" Helper /Overlay "Скоро ваша Windows 11 станет лучше" /Font "Impact" /Size "40"
+	start /b "" Helper /Overlay "Скоро ваша Windows 11 станет лучше (Надписи не отредактированы)" /Font "Impact" /Size "40"
 	Helper /HideConsole
 	timeout /t 3 /nobreak >nul 2>&1
 	
@@ -33,33 +33,11 @@ Rem Скрытие консоли и проверка версии
 		timeout /t 1 /nobreak >nul 2>&1
 		sc query wuauserv | find /i "RUNNING" >nul 2>&1 && %TI% net stop wuauserv
 	)
-Rem Удаление файлов обновлений
-	del /q /f /s "%SystemRoot%\SoftwareDistribution\Download\*.*" >nul 2>&1
-	rd /q /s "%SystemRoot%\SoftwareDistribution\Download\" >nul 2>&1
-	del /q /f /s "%SystemRoot%\SoftwareDistribution\Download" >nul 2>&1
-	del /q /f /s "%ProgramFiles(x86)%\Microsoft\EdgeUpdate\Download\*.*" >nul 2>&1
-	rd /q /s "%ProgramFiles(x86)%\Microsoft\EdgeUpdate\Download\" >nul 2>&1
+
 Rem Удаление кэша Windows Store
 	del /q /f /s "%userprofile%\AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalCache\*.*" >nul 2>&1
 	rd /q /s "%userprofile%\AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalCache\" >nul 2>&1
-Rem Удаление кэша Проводника
-	pushd "%LocalAppData%\Microsoft\Windows\Explorer" >nul 2>&1
-	del /s /q /a:h "IconCache*" "thumbcache*" >nul 2>&1
-	del /s /q /f "IconCache*" "thumbcache*" >nul 2>&1
-	popd
-	pushd "%LocalAppData%" >nul 2>&1
-	if exist IconCache.db del /a /q IconCache.db >nul 2>&1
-	if exist IconCache.db-wal del /a /q IconCache.db-wal >nul 2>&1
-	del /s /q /a:h "IconCache*" "thumbcache*" >nul 2>&1
-	popd
-Rem Очистка WinSxS
-	Dism /online /Cleanup-Image /StartComponentCleanup /ResetBase >nul 2>&1
-Rem Удаление лишних папок на диске С
-	for %%F in ("%SystemDrive%\Windows.old" "%SystemDrive%\PerfLogs" "%SystemDrive%\inetpub") do %TI% rd /q /s %%F
-Rem Удаления старых драйверов
-chcp 866 >nul 
-PowerShell -encodedCommand JABkAGkAcwBtAE8AdQB0ACAAPQAgAGQAaQBzAG0AIAAvAG8AbgBsAGkAbgBlACAALwBnAGUAdAAtAGQAcgBpAHYAZQByAHMADQAKACQATABpAG4AZQBzACAAPQAgACQAZABpAHMAbQBPAHUAdAAgAHwAIABzAGUAbABlAGMAdAAgAC0AUwBrAGkAcAAgADEAMAANAAoAJABPAHAAZQByAGEAdABpAG8AbgAgAD0AIAAiAHQAaABlAE4AYQBtAGUAIgANAAoAJABEAHIAaQB2AGUAcgBzACAAPQAgAEAAKAApAA0ACgBmAG8AcgBlAGEAYwBoACAAKAAgACQATABpAG4AZQAgAGkAbgAgACQATABpAG4AZQBzACAAKQAgAHsADQAKACAAIAAgACAAJAB0AG0AcAAgAD0AIAAkAEwAaQBuAGUADQAKACAAIAAgACAAJAB0AHgAdAAgAD0AIAAkACgAJAB0AG0AcAAuAFMAcABsAGkAdAAoACAAJwA6ACcAIAApACkAWwAxAF0ADQAKACAAIAAgACAAcwB3AGkAdABjAGgAIAAoACQATwBwAGUAcgBhAHQAaQBvAG4AKQAgAHsADQAKACAAIAAgACAAIAAgACAAIAAnAHQAaABlAE4AYQBtAGUAJwAgAHsAIAAkAE4AYQBtAGUAIAA9ACAAJAB0AHgAdAANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAJABPAHAAZQByAGEAdABpAG8AbgAgAD0AIAAnAHQAaABlAEYAaQBsAGUATgBhAG0AZQAnAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIABiAHIAZQBhAGsADQAKACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAfQANAAoAIAAgACAAIAAgACAAIAAgACcAdABoAGUARgBpAGwAZQBOAGEAbQBlACcAIAB7ACAAJABGAGkAbABlAE4AYQBtAGUAIAA9ACAAJAB0AHgAdAAuAFQAcgBpAG0AKAApAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACQATwBwAGUAcgBhAHQAaQBvAG4AIAA9ACAAJwB0AGgAZQBFAG4AdAByACcADQAKACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAYgByAGUAYQBrAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAfQANAAoAIAAgACAAIAAgACAAIAAgACcAdABoAGUARQBuAHQAcgAnACAAewAgACQARQBuAHQAcgAgAD0AIAAkAHQAeAB0AC4AVAByAGkAbQAoACkADQAKACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACQATwBwAGUAcgBhAHQAaQBvAG4AIAA9ACAAJwB0AGgAZQBDAGwAYQBzAHMATgBhAG0AZQAnAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIABiAHIAZQBhAGsADQAKACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAfQANAAoAIAAgACAAIAAgACAAIAAgACcAdABoAGUAQwBsAGEAcwBzAE4AYQBtAGUAJwAgAHsAIAAkAEMAbABhAHMAcwBOAGEAbQBlACAAPQAgACQAdAB4AHQALgBUAHIAaQBtACgAKQANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACQATwBwAGUAcgBhAHQAaQBvAG4AIAA9ACAAJwB0AGgAZQBWAGUAbgBkAG8AcgAnAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAYgByAGUAYQBrAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAB9AA0ACgAgACAAIAAgACAAIAAgACAAJwB0AGgAZQBWAGUAbgBkAG8AcgAnACAAewAgACQAVgBlAG4AZABvAHIAIAA9ACAAJAB0AHgAdAAuAFQAcgBpAG0AKAApAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAJABPAHAAZQByAGEAdABpAG8AbgAgAD0AIAAnAHQAaABlAEQAYQB0AGUAJwANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgAGIAcgBlAGEAawANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAfQANAAoAIAAgACAAIAAgACAAIAAgACcAdABoAGUARABhAHQAZQAnACAAewAgACAAJAB0AG0AcAAgAD0AIAAkAHQAeAB0AC4AcwBwAGwAaQB0ACgAIAAnAC4AJwAgACkADQAKACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACQAdAB4AHQAIAA9ACAAIgAkACgAJAB0AG0AcABbADIAXQApAC4AJAAoACQAdABtAHAAWwAxAF0AKQAuACQAKAAkAHQAbQBwAFsAMABdAC4AVAByAGkAbQAoACkAKQAiAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAkAEQAYQB0AGUAIAA9ACAAJAB0AHgAdAANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAJABPAHAAZQByAGEAdABpAG8AbgAgAD0AIAAnAHQAaABlAFYAZQByAHMAaQBvAG4AJwANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAYgByAGUAYQBrAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgAH0ADQAKACAAIAAgACAAIAAgACAAIAAnAHQAaABlAFYAZQByAHMAaQBvAG4AJwAgAHsAIAAkAFYAZQByAHMAaQBvAG4AIAA9ACAAJAB0AHgAdAAuAFQAcgBpAG0AKAApAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAkAE8AcABlAHIAYQB0AGkAbwBuACAAPQAgACcAdABoAGUATgB1AGwAbAAnAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAkAHAAYQByAGEAbQBzACAAPQAgAFsAbwByAGQAZQByAGUAZABdAEAAewAgACcARgBpAGwAZQBOAGEAbQBlACcAIAA9ACAAJABGAGkAbABlAE4AYQBtAGUADQAKACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAJwBWAGUAbgBkAG8AcgAnACAAPQAgACQAVgBlAG4AZABvAHIADQAKACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAJwBEAGEAdABlACcAIAA9ACAAJABEAGEAdABlAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACcATgBhAG0AZQAnACAAPQAgACQATgBhAG0AZQANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAnAEMAbABhAHMAcwBOAGEAbQBlACcAIAA9ACAAJABDAGwAYQBzAHMATgBhAG0AZQANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAnAFYAZQByAHMAaQBvAG4AJwAgAD0AIAAkAFYAZQByAHMAaQBvAG4ADQAKACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAJwBFAG4AdAByACcAIAA9ACAAJABFAG4AdAByAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAfQANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAJABvAGIAagAgAD0AIABOAGUAdwAtAE8AYgBqAGUAYwB0ACAALQBUAHkAcABlAE4AYQBtAGUAIABQAFMATwBiAGoAZQBjAHQAIAAtAFAAcgBvAHAAZQByAHQAeQAgACQAcABhAHIAYQBtAHMADQAKACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACQARAByAGkAdgBlAHIAcwAgACsAPQAgACQAbwBiAGoADQAKACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgAGIAcgBlAGEAawANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAB9AA0ACgAgACAAIAAgACAAIAAgACAAIAAnAHQAaABlAE4AdQBsAGwAJwAgAHsAIAAkAE8AcABlAHIAYQB0AGkAbwBuACAAPQAgACcAdABoAGUATgBhAG0AZQAnAA0ACgAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgAGIAcgBlAGEAawANAAoAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAfQANAAoAIAAgACAAIAB9AA0ACgB9AA0ACgAkAGwAYQBzAHQAIAA9ACAAJwAnAA0ACgAkAE4AbwB0AFUAbgBpAHEAdQBlACAAPQAgAEAAKAApAA0ACgBmAG8AcgBlAGEAYwBoACAAKAAgACQARAByACAAaQBuACAAJAAoACQARAByAGkAdgBlAHIAcwAgAHwAIABzAG8AcgB0ACAARgBpAGwAZQBuAGEAbQBlACkAIAApACAAewANAAoAIAAgACAAIABpAGYAIAAoACQARAByAC4ARgBpAGwAZQBOAGEAbQBlACAALQBlAHEAIAAkAGwAYQBzAHQAIAAgACkAIAB7ACAAIAAkAE4AbwB0AFUAbgBpAHEAdQBlACAAKwA9ACAAJABEAHIAIAAgAH0ADQAKACAAIAAgACAAJABsAGEAcwB0ACAAPQAgACQARAByAC4ARgBpAGwAZQBOAGEAbQBlAA0ACgB9AA0ACgAkAE4AbwB0AFUAbgBpAHEAdQBlACAAfAAgAHMAbwByAHQAIABGAGkAbABlAE4AYQBtAGUAIAB8ACAAZgB0AA0ACgAjAFMAZQBhAHIAYwBoAGkAbgBnACAAZgBvAHIAIABkAHUAcABsAGkAYwBhAHQAZQAgAGQAcgBpAHYAZQByAHMAIAANAAoAJABsAGkAcwB0ACAAPQAgACQATgBvAHQAVQBuAGkAcQB1AGUAIAB8ACAAcwBlAGwAZQBjAHQAIAAtAEUAeABwAGEAbgBkAFAAcgBvAHAAZQByAHQAeQAgAEYAaQBsAGUATgBhAG0AZQAgAC0AVQBuAGkAcQB1AGUADQAKACQAVABvAEQAZQBsACAAPQAgAEAAKAApAA0ACgBmAG8AcgBlAGEAYwBoACAAKAAgACQARAByACAAaQBuACAAJABsAGkAcwB0ACAAKQAgAHsADQAKACAAIAAgACAAVwByAGkAdABlAC0ASABvAHMAdAAgACIARAB1AHAAbABpAGMAYQB0AGUAIABkAHIAaQB2AGUAcgAgAGYAbwB1AG4AZAAiACAALQBGAG8AcgBlAGcAcgBvAHUAbgBkAEMAbwBsAG8AcgAgAFkAZQBsAGwAbwB3AA0ACgAgACAAIAAgACQAcwBlAGwAIAA9ACAAJABEAHIAaQB2AGUAcgBzACAAfAAgAHcAaABlAHIAZQAgAHsAIAAkAF8ALgBGAGkAbABlAE4AYQBtAGUAIAAtAGUAcQAgACQARAByACAAfQAgAHwAIABzAG8AcgB0ACAAZABhAHQAZQAgAC0ARABlAHMAYwBlAG4AZABpAG4AZwAgAHwAIABzAGUAbABlAGMAdAAgAC0AUwBrAGkAcAAgADEADQAKACAAIAAgACAAJABzAGUAbAAgAHwAIABmAHQADQAKACAAIAAgACAAJABUAG8ARABlAGwAIAArAD0AIAAkAHMAZQBsAA0ACgB9AA0ACgAjAFcAcgBpAHQAZQAtAEgAbwBzAHQAIAAiAEwAaQBzAHQAIABvAGYAIABkAHIAaQB2AGUAcgAgAHYAZQByAHMAaQBvAG4AIAAgAHQAbwAgAHIAZQBtAG8AdgBlACIAIAAtAEYAbwByAGUAZwByAG8AdQBuAGQAQwBvAGwAbwByACAAUgBlAGQADQAKACQAVABvAEQAZQBsACAAfAAgAGYAdAANAAoAIwBEAGUAbABlAHQAaQBuAGcAIABvAGwAZAAgAGQAcgBpAHYAZQByAHMADQAKAGYAbwByAGUAYQBjAGgAIAAoACAAJABpAHQAZQBtACAAaQBuACAAJABUAG8ARABlAGwAIAApACAAewANAAoAIAAgACAAIAAkAE4AYQBtAGUAIAA9ACAAJAAoACQAaQB0AGUAbQAuAE4AYQBtAGUAKQAuAFQAcgBpAG0AKAApAA0ACgAgACAAIAAgAFcAcgBpAHQAZQAtAEgAbwBzAHQAIAAiAGQAZQBsAGUAdABpAG4AZwAgACQATgBhAG0AZQAiACAALQBGAG8AcgBlAGcAcgBvAHUAbgBkAEMAbwBsAG8AcgAgAFkAZQBsAGwAbwB3AA0ACgAgACAAIAAgAFcAcgBpAHQAZQAtAEgAbwBzAHQAIAAiAHAAbgBwAHUAdABpAGwALgBlAHgAZQAgAC8AZABlAGwAZQB0AGUALQBkAHIAaQB2AGUAcgAgACAAJABOAGEAbQBlACIAIAAtAEYAbwByAGUAZwByAG8AdQBuAGQAQwBvAGwAbwByACAAWQBlAGwAbABvAHcADQAKACAAIAAgACAASQBuAHYAbwBrAGUALQBFAHgAcAByAGUAcwBzAGkAbwBuACAALQBDAG8AbQBtAGEAbgBkACAAIgBwAG4AcAB1AHQAaQBsAC4AZQB4AGUAIAAvAGQAZQBsAGUAdABlAC0AZAByAGkAdgBlAHIAIAAkAE4AYQBtAGUAIgANAAoAfQA= >nul 2>&1
-chcp 65001 >nul
+
 Rem Удаление ShellBags
 for %%k in (Bags BagMRU BagsMRU) do (
     reg delete "HKCU\Software\Microsoft\Windows\Shell\%%k" /f >nul 2>&1
@@ -99,10 +77,6 @@ Rem Удаление Помощника по удаленному подключ
 	start /wait "" "%~dp0\Work\setup.exe" --uninstall --system-level --force-uninstall --msedge >nul 2>&1
 	start /wait "" "%~dp0\Work\setup.exe" --uninstall --system-level --force-uninstall --msedgewebview >nul 2>&1
 	
-	
-	start /b "" Helper /Overlay "Удаления Защитника Windows не будет`n`n [4/13]" /Font "Impact" /Size "40"
-	timeout /t 4 /nobreak >nul 2>&1
-
 	start /b "" Helper /Overlay "Удаление дополнительных компонентов `n`n [5/13]" /Font "Impact" /Size "40"
 	for %%C in (
 		Microsoft.Windows.Notepad.System
@@ -186,80 +160,23 @@ Rem Отложенный запуск автоматических служб
 	for %%p in (EventSystem NlaSvc) do reg add "HKLM\System\CurrentControlSet\Services\%%p" /v "DelayedAutostart" /t reg_dword /d 1 /f >nul 2>&1
 Rem Минимизация системных отчетов
 	"%~dp0\Work\Eventlog" >nul 2>&1
-Rem Увеличить кэш иконок
-	reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer" /v "MaxCachedIcons" /t REG_SZ /d 4096 /f >nul
 Rem Увеличение порога разделения SVC
     PowerShell "$key = 'HKLM:\SYSTEM\CurrentControlSet\Control'; if (-not (Get-ItemProperty -Path $key -Name 'SvcHostSplitThresholdInKB' -ErrorAction SilentlyContinue)) { Write-Output ' Параметра SvcHostSplitThresholdInKB нет, отмена действий'; Pause; Exit } elseif (-not (Get-ItemProperty -Path $key -Name 'SvcHostSplitThresholdInKB_orig' -ErrorAction SilentlyContinue)) { Rename-ItemProperty -Path $key -Name 'SvcHostSplitThresholdInKB' -NewName 'SvcHostSplitThresholdInKB_orig'; $mem = (Get-CimInstance Win32_OperatingSystem).TotalVisibleMemorySize + 1024000; Set-ItemProperty -Path $key -Name 'SvcHostSplitThresholdInKB' -Value $mem -Type DWord }
 Rem Ускорить открытие папок
 	reg add "HKCU\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell" /v "FolderType" /t REG_SZ /d NotSpecified /f >nul 2>&1
 	for %%k in (Directory.Audio Directory.Image Directory.Video) do (for %%c in (Enqueue Play) do (reg add "HKCR\SystemFileAssociations\%%k\shell\%%c" /v "LegacyDisable" /t REG_SZ /d "" /f >nul)) >nul 2>&1
-Rem Отключить VBS
-    bcdedit /set hypervisorlaunchtype off >nul
-    for %%p in (
-        HypervisorEnforcedCodeIntegrity
-        LsaCfgFlags
-        RequirePlatformSecurityFeatures
-        ConfigureSystemGuardLaunch
-        ConfigureKernelShadowStacksLaunch
-    ) do reg delete "HKLM\Software\Policies\Microsoft\Windows\DeviceGuard" /v "%%p" /f >nul 2>&1
-    for %%p in (
-        EnableVirtualizationBasedSecurity
-        HVCIMATRequired
-    ) do reg add "HKLM\Software\Policies\Microsoft\Windows\DeviceGuard" /v "%%p" /t reg_dword /d 0 /f >nul 2>&1
-    for %%p in (
-        WasEnabledBy
-        WasEnabledBySysprep
-    ) do reg delete "HKLM\System\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /v "%%p" /f >nul 2>&1
-    for %%p in (
-        Enabled
-        HVCIMATRequired
-        Locked
-    ) do reg add "HKLM\System\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /v "%%p" /t reg_dword /d 0 /f >nul 2>&1
-    for %%p in (
-        EnableVirtualizationBasedSecurity
-        RequirePlatformSecurityFeatures
-        Locked
-    ) do reg add "HKLM\System\CurrentControlSet\Control\DeviceGuard" /v "%%p" /t reg_dword /d 0 /f >nul 2>&1
-    for %%p in (
-        Enabled
-        AuditModeEnabled
-        WasEnabledBy
-    ) do reg add "HKLM\System\CurrentControlSet\Control\DeviceGuard\Scenarios\KernelShadowStacks" /v "%%p" /t reg_dword /d 0 /f >nul 2>&1
 Rem Отключить GameDVR 
     reg add "HKCR\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d 0 /f >nul 
     reg add "HKCR\Software\Microsoft\Windows\CurrentVersion\GameDVR" /v "AppCaptureEnabled" /t REG_DWORD /d 0 /f >nul
 	reg add "HKLM\Software\Policies\Microsoft\Windows\GameDVR" /v "AllowGameDVR" /t REG_DWORD /d 0 /f >nul
 	reg add "HKLM\Software\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR" /v "Value" /t REG_DWORD /d 0 /f >nul
     reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\GameDVR" /v "AllowGameDVR" /t REG_DWORD /d 0 /f >nul
-Rem Схема питания Максимальная производительность
-Rem Внимание! На ноутбуках лучше использовать сбалансированную схему питания
-	%TI% reg add "HKLM\System\CurrentControlSet\Control\Power\User\PowerSchemes" /v ActivePowerScheme /t REG_SZ /d e9a42b02-d5df-448d-aa00-03f14749eb61 /f >nul
-Rem Функция Возобновить
 	"%~dp0\Work\vivetool.exe" /disable /id:56517033 >nul
     reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\CrossDeviceResume\Configuration" /v "IsResumeAllowed" /t REG_DWORD /d 0 /f >nul 
     reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\CrossDeviceResume\Configuration" /v "IsOneDriveResumeAllowed" /t REG_DWORD /d 0 /f >nul
 	
 	start /b "" Helper /Overlay "Настройка Центра обновления Windows `n`n [8/13]" /Font "Impact" /Size "40"
 	timeout /t 5 /nobreak >nul 2>&1
-Rem Запрет на установку драйверов из ЦО
-	reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Device Metadata" /v "PreventDeviceMetadataFromNetwork" /t REG_DWORD /d "1" /f >nul
-	reg add "HKLM\Software\Policies\Microsoft\Windows\Device Metadata" /v "PreventDeviceMetadataFromNetwork" /t REG_DWORD /d "1" /f >nul
-	reg add "HKLM\Software\Policies\Microsoft\Windows\DriverSearching" /v "SearchOrderConfig" /t REG_DWORD /d "0" /f >nul
-	reg add "HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate" /v "ExcludeWUDriversInQualityUpdate" /t REG_DWORD /d "1" /f >nul
-Rem Пауза обновлений до 07.07.77
-	reg add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "PauseUpdatesStartTime" /t REG_SZ /d 2024-09-13T00:00:00Z /f >nul
-	reg add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "PauseUpdatesExpiryTime" /t REG_SZ /d 2077-07-07T00:00:00Z /f >nul
-
-	reg add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "PauseFeatureUpdatesStartTime" /t REG_SZ /d 2024-09-13T00:00:00Z /f >nul
-	reg add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "PauseFeatureUpdatesExpiryTime" /t REG_SZ /d 2077-07-07T00:00:00Z /f >nul
-
-	reg add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "PauseQualityUpdatesStartTime" /t REG_SZ /d 2024-09-13T00:00:00Z /f >nul
-	reg add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "PauseQualityUpdatesExpiryTime" /t REG_SZ /d 2077-07-07T00:00:00Z /f >nul
-	
-	reg add "HKLM\Software\Microsoft\WindowsUpdate\UpdatePolicy\Settings" /v "PausedFeatureStatus" /t REG_DWORD /d 1 /f >nul
-	reg add "HKLM\Software\Microsoft\WindowsUpdate\UpdatePolicy\Settings" /v "PausedQualityStatus" /t REG_DWORD /d 1 /f >nul
-	reg add "HKLM\Software\Microsoft\WindowsUpdate\UpdatePolicy\Settings" /v "PausedQualityDate" /t REG_SZ /d "2077-07-07 13:00:00" /f >nul
-	reg add "HKLM\Software\Microsoft\WindowsUpdate\UpdatePolicy\Settings" /v "PausedFeatureDate" /t REG_SZ /d "2077-07-07 13:00:00" /f >nul
 Rem Запрет автоматических обновлений
 	reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 1 /f >nul
 
@@ -363,8 +280,6 @@ Rem Открывать Проводник в Этот компьютер
 Rem Показывать расширения файлов
 	reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v HideFileExt /t REG_DWORD /d 0 /f >nul
 
-
-	start /b "" Helper /Overlay "Сжатия системы не будет `n`n [13/13]" /Font "Impact" /Size "40"
 Rem Очистка Центра уведомлений
 	set "NameSvcMask="
 	for /f "delims=" %%A in (' 2^>nul reg query HKLM\System\CurrentControlSet\Services /k /f WpnUserService_ ^| find "HKEY_"') do set "NameSvcMask=%%~nxA"
